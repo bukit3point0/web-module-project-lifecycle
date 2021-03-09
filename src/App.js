@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import './App.css';
 
 import User from './components/User'
+import Followers from './components/Followers'
 
 const Page = styled.div``
 
@@ -18,12 +19,13 @@ const Search = styled.button``
 const App = () => {
 
   const [user, setUser] = useState("bukit3point0")
+  const [data, setData] = useState([])
 
   useEffect(() => {
-    axios.get("https://api.github.com/users/bukit3point0")
+    axios.get(`https://api.github.com/users/${user}`)
     .then(res => {
       console.log(res.data)
-      setUser(res.data)
+      setData(res.data)
     })
     .catch(err => {
       console.log(`heck ${err}`)
@@ -31,13 +33,38 @@ const App = () => {
   },[])
   console.log(user)
 
+  const handleChange = e => {
+    console.log("new value", e.target.value)
+    setUser(e.target.value)
+  }
+
+  const handleSubmit = e => {
+    e.preventDefault()
+    axios.get(`https://api.github.com/users/${user}`)
+    .then(res => {
+      console.log(res.data)
+      setData(res.data)
+    })
+    .catch(err => {
+      console.log(`AHH ERROR ${err}`)
+    })
+  }
+
   return (
     <Page>
-      <SearchBar>
-        <Find placeholder="search by user"/>
+      {/* <SearchBar
+        onSubmit={handleSubmit}
+      >
+        <Find 
+          type="text"
+          // value="user"
+          onChange={handleChange}
+          placeholder="search by user"
+        />
         <Search>Look Up</Search>
-      </SearchBar>
-      <User user={user}/>
+      </SearchBar> */}
+      <User user={data}/>
+      <Followers/>
     </Page>
   );
 }

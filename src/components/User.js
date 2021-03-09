@@ -5,9 +5,12 @@ const Page = styled.div`
     display:flex;
     justify-content:center;
     align-items:center;
+    padding: 2rem;
 `
 const Avatar = styled.img`
     height: 150px;
+    border-radius: 50%;
+    padding: 0 2rem 0 0;
 `
 const Info = styled.div``
 const Username = styled.h2`
@@ -17,7 +20,7 @@ const Stats = styled.p`
     margin: 0;
 `
 const LinkToProfile = styled.a`
-    color: purple;
+    color: lightpurple;
     text-decoration: none;
 `
 
