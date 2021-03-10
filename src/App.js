@@ -1,72 +1,71 @@
-import axios from 'axios';
-import React, {useState, useEffect} from 'react'
-import styled from 'styled-components'
+import React from 'react'
 import './App.css';
+import styled from 'styled-components'
+import axios from 'axios'
 
-import User from './components/User'
+import UserCard from './components/UserCard'
 import Followers from './components/Followers'
 
-const Page = styled.div``
+class App extends React.Component {
 
-const SearchBar = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 1.5rem 0;
-`
-const Find = styled.input``
-const Search = styled.button``
+  state = {
+    user: "bukit3point0",
+    userInfo: [],
+    followersArray: []
+}
 
-const App = () => {
+componentDidMount() {
+    axios.get(`https://api.github.com/users/${this.state.user}`)
+        .then(res => {
+          // console.log(res.data)
+            this.setState({
+                userInfo: res.data
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    axios.get(`https://api.github.com/users/${this.state.user}/followers`)
+        .then(res => {
+          // console.log(res.data)
+          const followers = []
+          res.data.forEach(e => {
+            followers.push(e.login)
+          })
+          this.setState({followersArray: followers})
+          // console.log(this.state.followersArray)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+}
 
-  const [user, setUser] = useState("bukit3point0")
-  const [data, setData] = useState([])
 
-  useEffect(() => {
-    axios.get(`https://api.github.com/users/${user}`)
-    .then(res => {
-      console.log(res.data)
-      setData(res.data)
-    })
-    .catch(err => {
-      console.log(`heck ${err}`)
-    })
-  },[])
-  console.log(user)
 
-  const handleChange = e => {
-    console.log("new value", e.target.value)
-    setUser(e.target.value)
-  }
 
-  const handleSubmit = e => {
-    e.preventDefault()
-    axios.get(`https://api.github.com/users/${user}`)
-    .then(res => {
-      console.log(res.data)
-      setData(res.data)
-    })
-    .catch(err => {
-      console.log(`AHH ERROR ${err}`)
-    })
-  }
+render() {
+    return (
+      <Page>
 
-  return (
-    <Page>
-      {/* <SearchBar
-        onSubmit={handleSubmit}
-      >
-        <Find 
-          type="text"
-          // value="user"
-          onChange={handleChange}
-          placeholder="search by user"
-        />
-        <Search>Look Up</Search>
-      </SearchBar> */}
-      <User user={data}/>
-      <Followers/>
-    </Page>
-  );
+        <SearchBar>
+          <SearchByUser/>
+            <Find>Search User</Find>
+        </SearchBar>
+
+        <UserCard userInfo={this.state.userInfo}/>
+        <Followers followersArray={this.state.followersArray}/>
+      </Page>
+    )
+}
+
 }
 
 export default App;
+
+const Page = styled.div``
+const SearchBar = styled.div`
+  display:flex;
+  justify-content: center;
+`
+const SearchByUser = styled.input``
+const Find = styled.button``

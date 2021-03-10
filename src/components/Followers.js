@@ -1,25 +1,35 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import User from './User'
+import FollowerCard from './FollowerCard'
 
-const Page = styled.div`
-    display:flex;
-    flex-direction: column;
-    align-items: center;
+const Page = styled.div``
+const FollowerTitle = styled.h2`
+    text-align: center;
 `
-const FollowersTitle = styled.h2``
-const FollowersList = styled.div``
+const FollowerContainer = styled.div`
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+`
 
 const Followers = props => {
+    
+    const {followersArray} = props
+
     return (
         <Page>
-            
-            <FollowersTitle>Followers</FollowersTitle>
-
-            <FollowersList>
-                {/* <User/> */}
-            </FollowersList>
+            <FollowerTitle>Followers:</FollowerTitle>
+            <FollowerContainer>
+                {followersArray.map(user => {
+                    return(
+                        <FollowerCard 
+                            key={user.id}
+                            user={user}
+                        />
+                    )
+                })}
+            </FollowerContainer>
         </Page>
     )
 }
